@@ -15,12 +15,13 @@ ENV ROON_INSTALLER_URL http://download.roonlabs.com/builds/${ROON_INSTALLER}
 # Grab installer and script to run it
 ADD ${ROON_INSTALLER_URL} /tmp
 RUN chmod +x /tmp/${ROON_INSTALLER}
+RUN mkdir -p ${ROON_DATAROOT}
 
 # Run the installer, answer "yes" and ignore errors
 RUN printf "y\ny\n" | /tmp/${ROON_INSTALLER} >> /tmp/roon_installer.log 2>&1
 
 # Your Roon data will be stored in /var/roon; /music is for your music
-VOLUME [ "/var/roon", "/music" ]
+# VOLUME [ "/var/roon", "/music" ]
 
 # This starts Roon when the container runs
 ENTRYPOINT /opt/RoonServer/start.sh

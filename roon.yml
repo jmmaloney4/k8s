@@ -19,3 +19,15 @@ spec:
       containers:
         - name: roon
           image: jmmaloney4/roon:latest
+          volumeMounts:
+          - mountPath: /var/roon/
+            name: roon-data
+          - mountPath: /music/
+            name: music
+      volumes:
+      - name: roon-data
+        hostPath:
+          path: /var/roon/
+      - name: music
+        hostPath:
+          path: /music/

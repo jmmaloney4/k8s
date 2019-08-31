@@ -1,35 +1,22 @@
-# Dockerfile to install the latest version of RoonServer for Linux x86_64
+# Based on https://github.com/mikedickey/RoonServer
+FROM debian:stretch-slim
 
-# Using latest debian, since 15.10 still regularly crashes
-FROM debian:jessie
-
-# Based upon RonCH's Dockerfile from https://community.roonlabs.com/t/roon-running-in-docker-on-synology/9979
-# and instructions from http://kb.roonlabs.com/LinuxInstall
-MAINTAINER mike@mikedickey.com
-
-# Install prerequisite packages
 RUN apt-get update \
-	&& apt-get install -y curl bzip2 libav-tools cifs-utils libasound2 \
-	&& apt-get clean && apt-get autoclean
+	&& apt-get install -y ffmpeg libav-tools curl bzip2 cifs-utils libasound2 \
+	&& apt-get -y clean && apt-get -y autoclean
 
-# Based upon RonCH's Dockerfile from https://community.roonlabs.com/t/roon-running-in-docker-on-synology/9979
-# and instructions from http://kb.roonlabs.com/LinuxInstall
-MAINTAINER mike@mikedickey.com
+ENV ROON_DATAROOT=/var/roon/
+ENV ROON_ID_DIR /var/roon/
 
 # Location of Roon's latest Linux installer
 ENV ROON_INSTALLER roonserver-installer-linuxx64.sh
 ENV ROON_INSTALLER_URL http://download.roonlabs.com/builds/${ROON_INSTALLER}
 
-# These are expected by Roon's startup script
-ENV ROON_DATAROOT /var/roon
-ENV ROON_ID_DIR /var/roon
-
 # Grab installer and script to run it
 ADD ${ROON_INSTALLER_URL} /tmp
 COPY run_installer.sh /tmp
-
-# Fix installer permissions
 RUN chmod 700 /tmp/${ROON_INSTALLER} /tmp/run_installer.sh
+RUN mkdir -p ${ROON_DATAROOT}
 
 # Run the installer, answer "yes" and ignore errors
 RUN /tmp/run_installer.sh
