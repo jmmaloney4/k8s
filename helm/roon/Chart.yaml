@@ -1,0 +1,4 @@
+apiVersion: v1
+name: roon
+description: Roon Server running in K8s
+version: 0.1.0

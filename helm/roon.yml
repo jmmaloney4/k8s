@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: roon
+  labels:
+    app: roon
+spec:
+  selector:
+    matchLabels:
+      app: roon
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: roon
+    spec:
+      hostNetwork: true
+      containers:
+        - name: roon
+          image: jmmaloney4/roon:latest
+          volumeMounts:
+          - mountPath: /var/roon/
+            name: roon-data
+          - mountPath: /music/
+            name: music
+      volumes:
+      - name: roon-data
+        hostPath:
+          path: /var/roon/
+      - name: music
+        hostPath:
+          path: /music/
