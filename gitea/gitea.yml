@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  labels:
+    app: gitea
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitea
+  template:
+    metadata:
+      labels:
+        app: gitea
+    spec:
+      containers:
+      - name: gitea
+        image: gitea/gitea:latest
+        env:
+        - name: USER_UID
+          value: "1000"
+        - name: USER_GID
+          value: "1000"
+        - name: DB_TYPE
+          value: postgres
+        - name: DB_HOST
+          value: postgres.gitea.svc.cluster.local:3306
+        - name: DB_NAME
+          value: gitea
+        - name: DB_USER
+          value: gitea
+        - name: DB_PASSWD
+          value: gitea
+        ports:
+        - containerPort: 3000
+          name: http
+        - containerPort: 22
+          name: git-ssh
+        volumeMounts:
+        - mountPath: /data
+          name: git-data
+      volumes:
+      - name: git-data
+        hostPath:
+          path: /srv/gitea/data/
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: gitea
+spec:
+  selector:
+    app: gitea
+  type: NodePort
+  ports:
+  - name: gitea-http
+    nodePort: 31000
+    port: 80
+    targetPort: http
+  - name: gitea-ssh
+    nodePort: 30022
+    port: 22
+    targetPort: gitea-ssh

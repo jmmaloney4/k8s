@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+spec:
+  type: ClusterIP
+  ports:
+  - name: postgres
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: postgres
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - image: postgres:9.6
+        name: postgres
+        env:
+          # TODO: Use secrets instead
+        - name: POSTGRES_USER
+          value: gitea
+        - name: POSTGRES_PASSWORD
+          value: gitea
+        - name: POSTGRES_DB
+          value: gitea
+        ports:
+        - containerPort: 5432
+          name: postgrestcp
+        volumeMounts:
+        - name: gitea-postgres-data
+          mountPath: /var/lib/postgresql/data/
+      volumes:
+      - name: gitea-postgres-data
+        hostPath:
+          path: /srv/gitea/postgres/
