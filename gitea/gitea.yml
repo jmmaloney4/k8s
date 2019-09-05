@@ -16,8 +16,10 @@ spec:
     spec:
       containers:
       - name: gitea
-        image: gitea/gitea:latest
+        image: gitea/gitea:1.9.2
         env:
+        - name: RUN_MODE
+          value: dev
         - name: USER_UID
           value: "1000"
         - name: USER_GID
@@ -25,13 +27,19 @@ spec:
         - name: DB_TYPE
           value: postgres
         - name: DB_HOST
-          value: postgres.gitea.svc.cluster.local:3306
+          value: postgres.gitea.svc.cluster.local:5432
         - name: DB_NAME
           value: gitea
         - name: DB_USER
           value: gitea
         - name: DB_PASSWD
           value: gitea
+        - name: LFS_START_SERVER
+          value: "true"
+        - name: ROOT_URL
+          value: http://192.168.1.69:31000/
+        - name: SSH_DOMAIN
+          value: 192.168.1.69:30022
         ports:
         - containerPort: 3000
           name: http

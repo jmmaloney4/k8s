@@ -34,7 +34,7 @@ spec:
         app: postgres
     spec:
       containers:
-      - image: postgres:9.6
+      - image: postgres:latest
         name: postgres
         env:
           # TODO: Use secrets instead
