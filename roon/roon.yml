@@ -30,4 +30,4 @@ spec:
           path: /var/roon/
       - name: music
         hostPath:
-          path: /music/
+          path: /storage/music/

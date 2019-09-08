@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: duplicati
+  labels:
+    app: duplicati
+spec:
+  selector:
+    matchLabels:
+      app: duplicati
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: duplicati
+    spec:
+      hostNetwork: true
+      containers:
+      - name: duplicati
+        image: linuxserver/duplicati:latest
+        volumeMounts:
+        - mountPath: /music/
+          name: music
+        - mountPath: /config/
+          name: config
+      volumes:
+      - name: music
+        hostPath:
+          path: /storage/music/
+      - name: config
+        hostPath:
+          path: /srv/duplicati/
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: duplicati-server
+spec:
+  selector:
+    app: duplicati
+  type: NodePort
+  ports:
+  - name: duplicati-web
+    nodePort: 30024
+    port: 30024
+    targetPort: 8200

@@ -39,9 +39,15 @@ spec:
         env:
           # TODO: Use secrets instead
         - name: POSTGRES_USER
-          value: gitea
+          valueFrom:
+            configMapKeyRef:
+              name: gitea-config
+              key: postgres-user
         - name: POSTGRES_PASSWORD
-          value: gitea
+          valueFrom:
+            secretKeyRef:
+              name: gitea-secrets
+              key: postgres-password
         - name: POSTGRES_DB
           value: gitea
         ports:

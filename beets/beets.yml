@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beets
+  labels:
+    app: beets
+spec:
+  selector:
+    matchLabels:
+      app: beets
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: beets
+    spec:
+      hostNetwork: true
+      containers:
+      - name: beets
+        image: jmmaloney4/beets:latest
+        volumeMounts:
+        - mountPath: /music/
+          name: music
+        - mountPath: /home/beets/.config/beets/
+          name: config
+          readOnly: true
+        - mountPath: /home/beets/.ssh/
+          name: authorized-keys
+          readOnly: true
+        ports:
+        - containerPort: 22
+          name: ssh
+      volumes:
+      - name: music
+        hostPath:
+          path: /storage/music/
+      - name: config
+        configMap:
+          name: beets-config
+      - name: authorized-keys
+        secret:
+          secretName: authorized-keys
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: beets-ssh
+spec:
+  selector:
+    app: beets
+  type: NodePort
+  ports:
+  - name: beets-ssh
+    nodePort: 30023
+    port: 22
+    targetPort: ssh
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: beets-config
+data:
+  config.yaml: |
+    directory: /music/
+    library: /music/library.db
+
+    plugins: fetchart missing zero info export scrub
+
+    paths:
+        default: %asciify{$albumartist/$album [$format] ($mb_albumid)/$track $title ($length)}
+        singleton: %asciify{$albumartist/$album [$format] ($mb_albumid)/$track $title ($length)}
+        comp: %asciify{Compilations/$album [$format] ($mb_albumid)/$track $title ($length)}
+
+    match:
+        preferred:
+            countries: ['US', 'GB|UK']
+            media: ['CD', 'Digital Media|File']
+            original_year: yes
+            
+    scrub:
+        auto: yes
+
+    zero:
+        auto: yes
+        update_database: true
+
+    # https://github.com/sbarakat/beets-copyartifacts
+    # copyartifacts:
+    #     extensions: .cue .log .pdf .jpg .png
+    #     print_ignored: yes
+
+    fetchart:
+      auto: yes

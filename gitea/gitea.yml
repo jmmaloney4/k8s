@@ -31,9 +31,15 @@ spec:
         - name: DB_NAME
           value: gitea
         - name: DB_USER
-          value: gitea
+          valueFrom:
+            configMapKeyRef:
+              name: gitea-config
+              key: postgres-user
         - name: DB_PASSWD
-          value: gitea
+          valueFrom:
+            secretKeyRef:
+              name: gitea-secrets
+              key: postgres-password
         - name: LFS_START_SERVER
           value: "true"
         - name: ROOT_URL
@@ -51,12 +57,12 @@ spec:
       volumes:
       - name: git-data
         hostPath:
-          path: /srv/gitea/data/
+          path: /storage/gitea/
 
 ---
 
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: gitea
 spec:
@@ -72,3 +78,23 @@ spec:
     nodePort: 30022
     port: 22
     targetPort: gitea-ssh
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitea-secrets
+type: Opaque
+data:
+  postgres-password: dnNnI0JzNV00aGdAeCxFPAo=
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gitea-config
+data:
+  postgres-user: gitea
+  
