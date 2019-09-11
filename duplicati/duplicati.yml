@@ -19,14 +19,19 @@ spec:
       - name: duplicati
         image: linuxserver/duplicati:latest
         volumeMounts:
-        - mountPath: /music/
-          name: music
+        - mountPath: /backup/storage/
+          name: storage
+        - mountPath: /backup/srv/
+          name: srv
         - mountPath: /config/
           name: config
       volumes:
-      - name: music
+      - name: storage
         hostPath:
-          path: /storage/music/
+          path: /storage/
+      - name: srv
+        hostPath:
+          path: /srv/
       - name: config
         hostPath:
           path: /srv/duplicati/
