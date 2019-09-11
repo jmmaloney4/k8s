@@ -72,11 +72,11 @@ spec:
   ports:
   - name: gitea-http
     nodePort: 31000
-    port: 80
+    port: 31000
     targetPort: http
   - name: gitea-ssh
     nodePort: 30022
-    port: 22
+    port: 30022
     targetPort: gitea-ssh
 
 ---

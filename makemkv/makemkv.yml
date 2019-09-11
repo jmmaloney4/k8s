@@ -15,7 +15,6 @@ spec:
       labels:
         app: makemkv
     spec:
-      hostNetwork: true
       containers:
       - name: makemkv
         image: jlesage/makemkv:latest

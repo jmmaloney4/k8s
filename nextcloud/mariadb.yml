@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  labels:
+    app: mariadb
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - image: mariadb/server:10.4
+        name: mariadb
+        env:
+          # TODO: Use secrets instead
+        - name: MARIADB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nextcloud-secrets
+              key: mariadb-password
+        ports:
+        - containerPort: 3306
+          name: mariadbtcp
+        volumeMounts:
+        - name: nextcloud-mariadb-data
+          mountPath: /var/lib/mysql/
+      volumes:
+      - name: nextcloud-mariadb-data
+        hostPath:
+          path: /srv/nextcloud/mariadb/
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mariadb
+  name: mariadb
+spec:
+  type: ClusterIP
+  ports:
+  - name: mariadb
+    port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: mariadb
