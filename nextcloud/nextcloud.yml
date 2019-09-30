@@ -47,19 +47,19 @@ spec:
       volumes:
       - name: nextcloud-main
         hostPath:
-          path: /var/nextcloud/main/
+          path: /srv/nextcloud/main/
       - name: nextcloud-data
         hostPath:
-          path: /var/nextcloud/data/
+          path: /storage/nextcloud/data/
       - name: nextcloud-custom-apps
         hostPath:
-          path: /var/nextcloud/custom_apps/
+          path: /storage/nextcloud/custom_apps/
       - name: nextcloud-config
         hostPath:
-          path: /var/nextcloud/config/
+          path: /srv/nextcloud/config/
       - name: nextcloud-themes
         hostPath:
-          path: /var/nextcloud/themes/
+          path: /srv/nextcloud/themes/
 
 ---
 

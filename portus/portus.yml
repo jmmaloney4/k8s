@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: roon
+  labels:
+    app: roon
+spec:
+  selector:
+    matchLabels:
+      app: roon
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: roon
+    spec:
+      containers:
+        - name: roon
+          image: opensuse:portus:2.5
+          volumeMounts:
+          - mountPath: /etc/registry/
+            name: config
+          env:
+          - name: PORTUS_DB_HOST
+            value: mariadb.portus.svc.cluster.local:3306
+          - name: PORTUS_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: portus-secrets
+                key: mariadb-password
+      volumes:
+      - name: config
+        hostPath
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: portus-secrets
+type: Opaque
+data:
+  mariadb-password: dnNnI0JzNV00aGdAeCxFPAo=

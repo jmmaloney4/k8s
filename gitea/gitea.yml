@@ -25,21 +25,18 @@ spec:
         - name: USER_GID
           value: "1000"
         - name: DB_TYPE
-          value: postgres
+          value: mysql
         - name: DB_HOST
-          value: postgres.gitea.svc.cluster.local:5432
+          value: mariadb.gitea.svc.cluster.local:3306
         - name: DB_NAME
           value: gitea
         - name: DB_USER
-          valueFrom:
-            configMapKeyRef:
-              name: gitea-config
-              key: postgres-user
+          value: root
         - name: DB_PASSWD
           valueFrom:
             secretKeyRef:
               name: gitea-secrets
-              key: postgres-password
+              key: mariadb-password
         - name: LFS_START_SERVER
           value: "true"
         - name: ROOT_URL
@@ -87,7 +84,7 @@ metadata:
   name: gitea-secrets
 type: Opaque
 data:
-  postgres-password: dnNnI0JzNV00aGdAeCxFPAo=
+  mariadb-password: dnNnI0JzNV00aGdAeCxFPAo=
 
 ---
 
@@ -96,5 +93,5 @@ kind: ConfigMap
 metadata:
   name: gitea-config
 data:
-  postgres-user: gitea
+  mariadb-user: root
   

@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: roon
+  name: {{ .Release.Name }}
   labels:
-    app: roon
+    app: {{ .Chart.Name }}
 spec:
   selector:
     matchLabels:
-      app: roon
+      app: {{ .Chart.Name }}
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: roon
+        app: {{ .Chart.Name }}
     spec:
       hostNetwork: true
       containers:
-        - name: roon
+        - name: {{ .Chart.Name }}
           image: jmmaloney4/roon:latest
           volumeMounts:
           - mountPath: /var/roon/
@@ -27,7 +27,7 @@ spec:
       volumes:
       - name: roon-data
         hostPath:
-          path: /srv/roon/
+          path: {{ .Values.dataPath }}
       - name: music
         hostPath:
-          path: /storage/music/
+          path: {{ .Values.musicPath }}

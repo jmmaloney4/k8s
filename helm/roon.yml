@@ -27,7 +27,7 @@ spec:
       volumes:
       - name: roon-data
         hostPath:
-          path: /var/roon/
+          path: /srv/roon/
       - name: music
         hostPath:
-          path: /music/
+          path: /storage/music/

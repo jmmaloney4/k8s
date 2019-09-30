@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calibre
+  labels:
+    app: calibre
+spec:
+  selector:
+    matchLabels:
+      app: calibre
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: calibre
+    spec:
+      containers:
+        - name: calibre
+          image: jmmaloney4/calibre:stretch
+          volumeMounts:
+          - mountPath: /library/
+            name: library
+      volumes:
+      - name: library
+        hostPath:
+          path: /srv/calibre/library/
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: calibre
+spec:
+  selector:
+    app: calibre
+  type: NodePort
+  ports:
+  - name: calibre
+    nodePort: 31006
+    port: 8085
+    targetPort: 8080
