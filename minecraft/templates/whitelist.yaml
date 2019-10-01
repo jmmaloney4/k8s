@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-whitelist
+data:
+  whitelist.json: |
+    [ { "uuid": "138ab713acfd4cedb3f0a1323a491ba6", "name": "jmmaloney4" } ]

@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-properties
+data:
+  server.properties:
+    motd=A Vanilla Minecraft Server powered by Docker
+    server-port={{ .Values.port }}
+    difficulty=easy
+    hardcore=false
+    gamemode=survival
+    force-gamemode=true
+    allow-nether=true
+
+    enforce-whitelist={{ .Values.whitelist }}
+    white-list={{ .Values.whitelist }}
+    online-mode=true
+    max-players=20
+    view-distance=24
+    enable-command-block=true
+    allow-flight=false
+    spawn-protection=16
+    max-tick-time=60000
+    spawn-monsters=true
+    spawn-animals=true
+    spawn-npcs=true
+    pvp=true
+
+    {{ if .Values.seed }}
+    level-seed={{ .Values.seed }}
+    {{ end }}
+    
+    generator-settings=
+    level-type=default
+    generate-structures=true
+    max-build-height=256
+    level-name=world
+    max-world-size=29999984
+
+    snooper-enabled=false
+    enable-rcon=false
+    enable-query=false
+    query.port=25565
+    player-idle-timeout=10
+
+    broadcast-rcon-to-ops=true
+    rcon.port=25575
+    rcon.password=minecraft
+    broadcast-console-to-ops=true
+
+    op-permission-level=4
+    function-permission-level=2
+    server-ip=
+    
+    {{ if .Values.resourcePack }} 
+    resource-pack={{ .Values.resourcePack }}
+    {{ end }}
+
+    {{ if .Values.resourcePackSHA1 }}
+    resource-pack-sha1={{ .Values.resourcePackSHA1 }}
+    {{ end }}
+
+    network-compression-threshold=256
+    use-native-transport=true
+    prevent-proxy-connections=false

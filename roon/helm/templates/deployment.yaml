@@ -21,11 +21,11 @@ spec:
           image: jmmaloney4/roon:latest
           volumeMounts:
           - mountPath: /var/roon/
-            name: roon-data
+            name: data
           - mountPath: /music/
             name: music
       volumes:
-      - name: roon-data
+      - name: data
         hostPath:
           path: {{ .Values.dataPath }}
       - name: music

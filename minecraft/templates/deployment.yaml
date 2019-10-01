@@ -15,11 +15,33 @@ spec:
       labels:
         app: {{ .Chart.Name }}
     spec:
+      restartPolicy: Always
       containers:
         - name: server
           image: itzg/minecraft-server:latest
           env:
           - name: EULA
             value: "TRUE"
-          - name: SERVER_PORT
-            value: {{ .Values.port | quote }}
+          # - name: SERVER_PORT
+          #   value: {{ .Values.port | quote }}
+          - name: VERSION
+            value: {{ .Values.minecraftVersion | quote }}
+          volumeMounts:
+          - mountPath: /data/
+            name: data
+          - mountPath: /data/server.properties
+            name: properties
+            subPath: server.properties
+          - mountPath: /data/whitelist.json
+            name: whitelist
+            subPath: whitelist.json
+      volumes:
+      - name: data
+        hostPath:
+          path: {{ .Values.dataPath }}
+      - name: properties
+        configMap:
+          name: {{ .Release.Name }}-properties
+      - name: whitelist
+        configMap:
+          name: {{ .Release.Name }}-whitelist

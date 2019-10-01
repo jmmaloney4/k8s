@@ -1,1 +1,11 @@
-port: 32565
+minecraftVersion: 1.14.4
+whitelist: "true"
+seed: "I need a heroooo"
+port: "32565"
+dataPath: /srv/minecraft/
+
+worldName: world
+savesPath: /storage/minecraft/saves/
+
+# resourcePack:
+# resourcePackSHA1:
