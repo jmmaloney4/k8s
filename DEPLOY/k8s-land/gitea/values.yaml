@@ -127,14 +127,14 @@ resources:
 ## ref:
 ##
 persistence:
-  enabled: false
+  enabled: true
   # existingGiteaClaim: gitea-gitea
   giteaSize: 10Gi
-  # storageClass: glusterfs
-  accessMode: ReadWriteMany
+  # storageClass: longhorn
+  accessMode: ReadWriteOnce
   ## addtional annotations for PVCs. Uncommenting will prevent the PVC from being deleted.
-  annotations:
-    "helm.sh/resource-policy": keep
+  # annotations:
+  #   "helm.sh/resource-policy": keep
 
 ## if you want to mount a volume directly without using a storageClass or pvcs
 #  directGiteaVolumeMount:
