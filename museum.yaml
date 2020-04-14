@@ -1,0 +1,13 @@
+env:
+  secret:
+    # BASIC_AUTH_USER: curator
+    # BASIC_AUTH_PASS: mypassword
+  open:
+    STORAGE: local
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 8Gi
+service:
+  type: NodePort
+  nodePort: 30009

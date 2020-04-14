@@ -73,7 +73,7 @@ minecraftServer:
   # A comma-separated list of player names to whitelist.
   whitelist:
   # A comma-separated list of player names who should be admins.
-  ops: jmmaloney4, Maloncha, sporting6
+  ops: jmmaloney4
   # A server icon URL for server listings. Auto-scaled and transcoded.
   icon: "https://i.redd.it/1ps6yl2m6ry31.jpg"
   # Max connected players.
@@ -93,7 +93,7 @@ minecraftServer:
   # If set to true, players will be set to spectator mode if they die.
   hardcore: false
   # The maximum height in which building is allowed.
-  maxBuildHeight: 256
+  maxBuildHeight: 1024
   # The maximum number of milliseconds a single tick may take before the server watchdog stops the server with the message. -1 disables this entirely.
   maxTickTime: 60000
   # Determines if animals will be able to spawn.
@@ -103,9 +103,9 @@ minecraftServer:
   # Determines if villagers will be spawned.
   spawnNPCs: true
   # Max view distance (in chunks).
-  viewDistance: 30
+  viewDistance: 50
   # Define this if you want a specific map generation seed.
-  levelSeed: hitland
+  levelSeed: gotem
   # One of: creative, survival, adventure, spectator
   gameMode: survival
   # Message of the Day
@@ -117,7 +117,7 @@ minecraftServer:
   # When levelType == FLAT or CUSTOMIZED, this can be used to further customize map generation.
   # ref: https://hub.docker.com/r/itzg/minecraft-server/
   generatorSettings:
-  worldSaveName: hitland
+  worldSaveName: jackcraft
   # If set, this URL will be downloaded at startup and used as a starting point
   downloadWorldUrl:
   # force re-download of server file
@@ -172,7 +172,7 @@ persistence:
   dataDir:
     # Set this to false if you don't care to persist state between restarts.
     enabled: true
-    Size: 10Gi
+    Size: 30Gi
 
 podAnnotations: {}
 

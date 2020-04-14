@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  labels:
+    app: busybox
+spec:
+  containers:
+  - image: ubuntu:bionic
+    command:
+      - apt-get update && apt-get install -y git git-lfs
+      - sleep
+      - "3600"
+    tty: true
+    stdin: true
+    imagePullPolicy: IfNotPresent
+    name: busybox
+    volumeMounts:
+    - mountPath: /home/busy/
+      name: busy
+  restartPolicy: Always
+  volumes:
+  - name: busy
+    hostPath:
+      path: /storage/busybox/

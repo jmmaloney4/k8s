@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heimdall
+  labels:
+    app: heimdall
+spec:
+  selector:
+    matchLabels:
+      app: heimdall
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: heimdall
+    spec:
+      containers:
+        - name: heimdall
+          image: linuxserver/heimdall:latest
+          volumeMounts:
+          - mountPath: /config
+            name: config
+      volumes:
+      - name: config
+        hostPath:
+          path: /srv/heimdall/
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: heimdall
+  labels:
+    app: heimdall
+spec:
+  type: NodePort
+  selector:
+    app: heimdall
+  ports:
+    - port: 80
+      protocol: TCP
+      nodePort: 30000

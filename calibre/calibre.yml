@@ -39,5 +39,5 @@ spec:
   ports:
   - name: calibre
     nodePort: 31006
-    port: 8085
+    port: 8083
     targetPort: 8080
