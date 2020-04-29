@@ -1,0 +1,6 @@
+persistence:
+  storageClass: "longhorn"
+  size: "30Gi" 
+service:
+  type: "NodePort"
+image: ipfs/go-ipfs:latest

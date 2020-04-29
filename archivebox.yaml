@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: archivebox
+  labels:
+    app: archivebox
+spec:
+  selector:
+    matchLabels:
+      app: archivebox
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: archivebox
+    spec:
+      containers:
+        - name: archivebox
+          image: nikisweeting/archivebox:latest
+          volumeMounts:
+          - mountPath: /data
+            name: data
+      volumes:
+      - name: data
+        hostPath:
+          path: /storage/archivebox/
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: archivebox
+  labels:
+    app: archivebox
+spec:
+  type: NodePort
+  selector:
+    app: archivebox
+  ports:
+    - port: 8098
+      protocol: TCP
+      nodePort: 30013

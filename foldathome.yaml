@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foldathome
+  labels:
+    app: foldathome
+spec:
+  selector:
+    matchLabels:
+      app: foldathome
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: foldathome
+    spec:
+      containers:
+        - name: foldathome
+          image: foldingathome/fah-gpu:latest
+          args: ["--allow", "0/0", "--web-allow", "0/0"]
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+          env:
+            - name: ENABLE_GPU
+              value: "true"
+            - name: ENABLE_SMP
+              value: "true"
+          volumeMounts:
+            - mountPath: "/fah"
+              name: fah
+      volumes:
+      - name: fah
+        persistentVolumeClaim:
+          claimName: fah
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fah
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 25Gi
+  storageClassName: longhorn
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: foldathome
+  labels:
+    app: foldathome
+spec:
+  type: NodePort
+  selector:
+    app: foldathome
+  ports:
+    - port: 7396
+      name: web
+      protocol: TCP
+      nodePort: 30014
+    - port: 36330
+      name: out
+      protocol: TCP

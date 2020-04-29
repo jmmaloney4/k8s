@@ -21,6 +21,10 @@ spec:
         # stdin: true
         imagePullPolicy: IfNotPresent
         name: transmission
+        resources:
+          requests:
+            memory: "250Mi"
+            cpu: "1000m"
         securityContext:
           privileged: true
           capabilities:
@@ -36,6 +40,7 @@ spec:
           initialDelaySeconds: 60
           periodSeconds: 15
         env:
+        # https://github.com/transmission/transmission/wiki/Editing-Configuration-Files
         - name: OPENVPN_PROVIDER
           value: CUSTOM
         - name: OPENVPN_USERNAME
@@ -58,20 +63,18 @@ spec:
           value: "100"
         - name: TRANSMISSION_SPEED_LIMIT_UP_ENABLED
           value: "true"
-        - name: TRANSMISSION_UPLOAD_SLOTS_PER_TORRENT
-          value: "2"
         - name: TRANSMISSION_DOWNLOAD_QUEUE_ENABLED
           value: "false"
         - name: TRANSMISSION_QUEUE_STALLED_ENABLED
           value: "false"
         - name: TRANSMISSION_SEED_QUEUE_ENABLED
-          value: "true"
-        - name: TRANSMISSION_SEED_QUEUE_SIZE
-          value: "3"
+          value: "false"
         - name: TRANSMISSION_PREALLOCATION
           value: "2"
         - name: TRANSMISSION_PEER_SOCKET_TOS
           value: "lowcost"
+        - name: TRANSMISSION_ENCRYPTION
+          value: "2"
         volumeMounts:
         - mountPath: /data
           name: torrents

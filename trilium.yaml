@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trilium
+  labels:
+    app: trilium
+spec:
+  selector:
+    matchLabels:
+      app: trilium
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: trilium
+    spec:
+      containers:
+        - name: trilium
+          image: zadam/trilium:latest
+          volumeMounts:
+          - mountPath: /root/trilium-data
+            name: data
+      volumes:
+      - name: data
+        hostPath:
+          path: /srv/trilium/
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: trilium
+  labels:
+    app: trilium
+spec:
+  type: NodePort
+  selector:
+    app: trilium
+  ports:
+    - port: 8080
+      protocol: TCP
+      nodePort: 30012

@@ -8,7 +8,7 @@ imageTag: latest
 resources:
   requests:
     memory: 2Gi
-    cpu: 2000m
+    cpu: 1500m
 
 # upgrade strategy type (e.g. Recreate or RollingUpdate)
 strategyType: Recreate
