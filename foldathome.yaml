@@ -20,7 +20,10 @@ spec:
           image: foldingathome/fah-gpu:latest
           args: ["--allow", "0/0", "--web-allow", "0/0"]
           resources:
+            requests:
+              cpu: "1000m"
             limits:
+              cpu: "5000m"
               nvidia.com/gpu: 1
           env:
             - name: ENABLE_GPU
@@ -47,7 +50,7 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 25Gi
+      storage: 10Gi
   storageClassName: longhorn
 
 ---

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: beets
+  name: beets
+spec:
+  selector:
+    matchLabels:
+      app: beets
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: beets
+    spec:
+      containers:
+      - image: linuxserver/beets:latest
+        imagePullPolicy: Always
+        name: beets
+        volumeMounts:
+          - mountPath: /music/
+            name: beets
+          - mountPath: /config/
+            name: config
+      - image: minio/mc:latest
+        name: minio
+        args: ["mirror", "--watch", "--overwrite", "/music/", "minio/music/"]
+        volumeMounts:
+        - mountPath: /music/
+          name: beets
+          readOnly: true
+        - mountPath: /root/.mc/config.json
+          name: mc-config
+          subPath: config.json
+      volumes:
+        - name: beets
+          persistentVolumeClaim:
+            claimName: beets-pvc
+        - name: config
+          configMap:
+            name: beets-config
+        - name: mc-config
+          configMap:
+            name: beets-mc-config

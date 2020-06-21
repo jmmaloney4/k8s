@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: letsencrypt
+  labels:
+    app: letsencrypt
+spec:
+  selector:
+    matchLabels:
+      app: letsencrypt
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: letsencrypt
+    spec:
+      containers:
+        - name: letsencrypt
+          image: linuxserver/letsencrypt:latest
+          env:
+          - name: URL
+            value: roomofrequirement.duckdns.org 
+          - name: SUBDOMAINS
+            value: wildcard
+          - name: DUCKDNSTOKEN
+            value: 6020f3dd-4f22-4f94-bffc-b78fa8e255ad
+          - name: VALIDATION
+            value: duckdns
+          - name: EMAIL
+            value: jmmaloney4@gmail.com
+        - name: duckdns
+          image: linuxserver/duckdns:latest
+          env:
+          - name: SUBDOMAINS
+            value: roomofrequirement,jmmaloney4,maloney-casa
+          - name: TOKEN
+            value: 6020f3dd-4f22-4f94-bffc-b78fa8e255ad

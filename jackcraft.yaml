@@ -21,8 +21,8 @@ affinity: {}
 
 securityContext:
   # Security context settings
-  runAsUser: 1000
-  fsGroup: 2000
+  runAsUser:  4096
+  fsGroup: 1000
 # Most of these map to environment variables. See Minecraft for details:
 # https://hub.docker.com/r/itzg/minecraft-server/
 livenessProbe:
@@ -51,7 +51,7 @@ minecraftServer:
   # One of: LATEST, SNAPSHOT, or a specific version (ie: "1.7.9").
   version: "1.12.2"
   # This can be one of "VANILLA", "FORGE", "SPIGOT", "BUKKIT", "PAPER", "FTB", "SPONGEVANILLA"
-  type: "FORGE"
+  type: "FTB"
   # If type is set to FORGE, this sets the version; this is ignored if forgeInstallerUrl is set
   forgeVersion: "14.23.5.2847"
   # If type is set to SPONGEVANILLA, this sets the version
@@ -124,6 +124,7 @@ minecraftServer:
   forceReDownload: false
   # If set, the modpack at this URL will be downloaded at startup
   # downloadModpackUrl: http://solder.endermedia.com/repository/downloads/the-1122-pack/the-1122-pack_1.1.1.zip
+  downloadModpackUrl: https://www.curseforge.com/minecraft/modpacks/ftb-infinity-evolved/download/2731544
   # If true, old versions of downloaded mods will be replaced with new ones from downloadModpackUrl
   removeOldMods: false
   # Check accounts against Minecraft account service.

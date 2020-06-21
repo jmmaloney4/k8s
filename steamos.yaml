@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: steamos
+  labels:
+    app: steamos
+spec:
+  selector:
+    matchLabels:
+      app: steamos
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: steamos
+    spec:
+      containers:
+        - name: steamos
+          image: tianon/steamos:latest
+          volumeMounts:
+          - mountPath: /data/
+            name: data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: steamos
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: steamos
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 25Gi
+  storageClassName: longhorn

@@ -23,8 +23,23 @@ spec:
             name: config
       volumes:
       - name: config
-        hostPath:
-          path: /srv/heimdall/
+        persistentVolumeClaim:
+          claimName: heimdall-config
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: heimdall-config
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 15Gi
+  storageClassName: longhorn
 
 ---
 

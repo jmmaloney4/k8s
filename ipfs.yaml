@@ -1,6 +1,7 @@
 persistence:
-  storageClass: "longhorn"
-  size: "30Gi" 
+  storageClass: "rook-ceph-block"
+  size: "10Gi"
 service:
   type: "NodePort"
+  nodePort: 30451
 image: ipfs/go-ipfs:latest

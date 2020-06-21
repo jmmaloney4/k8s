@@ -23,8 +23,7 @@ spec:
         name: transmission
         resources:
           requests:
-            memory: "250Mi"
-            cpu: "1000m"
+            cpu: "150m"
         securityContext:
           privileged: true
           capabilities:
@@ -60,7 +59,7 @@ spec:
         - name: TRANSMISSION_PEER_PORT
           value: "14223"
         - name: TRANSMISSION_SPEED_LIMIT_UP
-          value: "100"
+          value: "2000"
         - name: TRANSMISSION_SPEED_LIMIT_UP_ENABLED
           value: "true"
         - name: TRANSMISSION_DOWNLOAD_QUEUE_ENABLED

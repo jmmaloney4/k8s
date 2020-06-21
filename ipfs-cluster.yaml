@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ipfs-cluster
+  labels:
+    app: ipfs-cluster
+spec:
+  selector:
+    matchLabels:
+      app: ipfs-cluster
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ipfs-cluster
+    spec:
+      containers:
+        - name: ipfs-cluster
+          image: ipfs/ipfs-cluster:latest
+          # args: ["--allow", "0/0", "--web-allow", "0/0", "--gpus"]
+          resources:
+            requests:
+              cpu: "250m"
+            limits:
+              cpu: "2000m"
+          volumeMounts:
+            - mountPath: "/data"
+              name: data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: ipfs-cluster
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ipfs-cluster
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: longhorn
