@@ -2,44 +2,57 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: beets
-  name: beets
+    app: b2
+  name: b2
 spec:
   selector:
     matchLabels:
-      app: beets
+      app: b2
   replicas: 1
   template:
     metadata:
       labels:
-        app: beets
+        app: b2
     spec:
       containers:
-      - image: linuxserver/beets:latest
-        imagePullPolicy: Always
-        name: beets
-        volumeMounts:
-          - mountPath: /music/
-            name: beets
-          - mountPath: /config/
-            name: config
       - image: minio/mc:latest
         name: minio
-        args: ["mirror", "--watch", "--overwrite", "/music/", "minio/music/"]
+        args: ["mirror", "--watch", "--overwrite", "minio/music/", "b2-music/jmmaloney4-music/"]
         volumeMounts:
-        - mountPath: /music/
-          name: beets
-          readOnly: true
         - mountPath: /root/.mc/config.json
           name: mc-config
           subPath: config.json
       volumes:
-        - name: beets
-          persistentVolumeClaim:
-            claimName: beets-pvc
-        - name: config
-          configMap:
-            name: beets-config
         - name: mc-config
           configMap:
-            name: beets-mc-config
+            name: b2-mc-config
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: b2-mc-config
+  labels:
+    app: b2
+data:
+  config.json: |
+    {
+      "version": "9",
+      "hosts": {
+        "minio": {
+          "url": "http://192.168.1.69:30004",
+          "accessKey": "AKIAIOSFODNN7EXAMPLE",
+          "secretKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+          "api": "s3v4",
+          "lookup": "auto"
+        },
+        "b2-music": {
+          "url": "https://s3.us-west-002.backblazeb2.com",
+          "accessKey": "002c0e53057bd940000000009",
+          "secretKey": "K002pDghCa/00jPMQlGCHzj+eyL1RP4",
+          "api": "s3v4",
+          "lookup": "auto"
+        }
+      }
+    }
