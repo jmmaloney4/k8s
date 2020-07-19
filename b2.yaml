@@ -42,8 +42,8 @@ data:
       "hosts": {
         "minio": {
           "url": "http://192.168.1.69:30004",
-          "accessKey": "AKIAIOSFODNN7EXAMPLE",
-          "secretKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+          "accessKey": "admin",
+          "secretKey": "X4Nid8EDsAsDj3G4mivUKcu2Zue4ueRV6usc6nzC",
           "api": "s3v4",
           "lookup": "auto"
         },

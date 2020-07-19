@@ -22,13 +22,21 @@ spec:
           - name: URL
             value: roomofrequirement.duckdns.org 
           - name: SUBDOMAINS
-            value: wildcard
+            value: notes
           - name: DUCKDNSTOKEN
             value: 6020f3dd-4f22-4f94-bffc-b78fa8e255ad
           - name: VALIDATION
             value: duckdns
           - name: EMAIL
             value: jmmaloney4@gmail.com
+          - name: ONLY_SUBDOMAINS
+            value: "false"
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /config/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: config
+              mountPath: /config
         - name: duckdns
           image: linuxserver/duckdns:latest
           env:
@@ -36,3 +44,68 @@ spec:
             value: roomofrequirement,jmmaloney4,maloney-casa
           - name: TOKEN
             value: 6020f3dd-4f22-4f94-bffc-b78fa8e255ad
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+      - name: config
+        persistentVolumeClaim:
+          claimName: letsencrypt-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+ name: letsencrypt
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 443
+    protocol: TCP
+    name: https
+  - port: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: letsencrypt
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  labels:
+    app: letsencrypt
+data:
+  nginx.conf: |
+    http {
+      server {
+        listen 80;
+        listen [::]:80;
+        server_name notes.roomofrequirement.duckdns.org;
+        location / {
+          proxy_pass http://trilium.default.svc.cluster.local/;
+          proxy_set_header Host $host;
+        }
+      }
+    }
+    events {
+
+    }
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: letsencrypt-config
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: rook-ceph-block

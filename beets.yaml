@@ -37,8 +37,19 @@ spec:
             name: beets
           - mountPath: /config/
             name: config
+          - mountPath: /downloads/
+            name: downloads
       - image: minio/mc:latest
-        name: minio
+        name: download
+        command: ["sh", "-c", "while true; do sleep 86400; done"]
+        volumeMounts:
+        - mountPath: /downloads/
+          name: downloads
+        - mountPath: /root/.mc/config.json
+          name: mc-config
+          subPath: config.json
+      - image: minio/mc:latest
+        name: sync
         args: ["mirror", "--watch", "--overwrite", "/music/", "minio/music/"]
         volumeMounts:
         - mountPath: /music/
@@ -57,6 +68,8 @@ spec:
         - name: mc-config
           configMap:
             name: beets-mc-config
+        - name: downloads
+          emptyDir: {}
 
 ---
 
@@ -88,8 +101,8 @@ data:
       "hosts": {
         "minio": {
           "url": "http://192.168.1.69:30004",
-          "accessKey": "AKIAIOSFODNN7EXAMPLE",
-          "secretKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+          "accessKey": "admin",
+          "secretKey": "X4Nid8EDsAsDj3G4mivUKcu2Zue4ueRV6usc6nzC",
           "api": "s3v4",
           "lookup": "auto"
         }

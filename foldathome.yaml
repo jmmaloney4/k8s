@@ -51,7 +51,7 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: longhorn
+  storageClassName: rook-ceph-block
 
 ---
 
@@ -62,14 +62,14 @@ metadata:
   labels:
     app: foldathome
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: foldathome
   ports:
-    - port: 7396
+    - targetPort: 7396
+      port: 80
       name: web
       protocol: TCP
-      nodePort: 30014
-    - port: 36330
-      name: out
-      protocol: TCP
+    # - port: 36330
+    #   name: out
+    #   protocol: TCP
