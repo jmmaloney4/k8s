@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lotus
+  labels:
+    app: lotus
+spec:
+  selector:
+    matchLabels:
+      app: lotus
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: lotus
+    spec:
+      containers:
+        - name: lotus
+          image: textile/lotus:latest
+          volumeMounts:
+          - mountPath: /data
+            name: data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+            claimName: lotus-pvc
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: lotus-pvc
+spec:
+  accessModes: 
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Ti
+  storageClassName: rook-ceph-block

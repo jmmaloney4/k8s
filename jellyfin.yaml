@@ -20,16 +20,16 @@ spec:
         - name: jellyfin
           image: jellyfin/jellyfin:latest
           volumeMounts:
-          - mountPath: /media/
-            name: media
-            readOnly: true
+          # - mountPath: /media/
+          #   name: media
+          #   readOnly: true
           - mountPath: /config/
             name: config
       volumes:
-      - name: media
-        persistentVolumeClaim:
-          readOnly: true
-          claimName: torrentleech-data-pvc
+      # - name: media
+      #   persistentVolumeClaim:
+      #     readOnly: true
+      #     claimName: torrentleech-data-pvc
       - name: config
         persistentVolumeClaim:
           claimName: jellyfin-config
@@ -58,15 +58,12 @@ metadata:
   labels:
     app: jellyfin
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: jellyfin
   ports:
     - port: 80
+      targetPort: 8096
       name: web
-      protocol: TCP
-      nodePort: 30006
-    - port: 8096
-      name: web2
-      nodePort: 30005
+      # nodePort: 30005
       protocol: TCP
